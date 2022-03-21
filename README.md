@@ -10,7 +10,7 @@ Code of the NeurIPS 2020 paper: [Cross-Modality Sub-Image Retrieval using Contra
 - [How does it work?](#how-does-it-work)
 - [Key findings of the paper](#key-findings-of-the-paper)
 - [Datasets](#datasets)
-- [Creation of CBIR]
+- [Creation of CBIR](#creation-of-cbir)
 - [Scripts](#scripts)
 - [Citation](#citation)
 
