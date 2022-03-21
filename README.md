@@ -28,6 +28,11 @@ This repository provides the code needed to preform reverse image search between
 
 ## How does it work?
 
+
+<p align="center">
+  <img src="resources/pipeline.png" width=700 />
+</p>
+
 ## Key findings of the paper
 
 ## Datasets
