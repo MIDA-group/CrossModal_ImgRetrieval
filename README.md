@@ -28,21 +28,24 @@ This repository provides the code needed to preform reverse image search between
 
 ## How does it work?
 
+TODO
 
 <p align="center">
   <img src="resources/pipeline.png" width=700 />
 </p>
 
 ## Key findings of the paper
+TODO
 
 ## Datasets
 We used the following publicly available dataset:
 * Multimodal Biomedical Dataset for Evaluating Registration Methods: https://zenodo.org/record/3874362
 
 ## Creation of CBIR
+TODO
 
 ## Scripts
-
+TODO
 
 **Important:** for each script make sure you update the paths to load the correct
 datasets and export the results in your favorite directory.
