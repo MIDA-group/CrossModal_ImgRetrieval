@@ -27,15 +27,15 @@ This repository provides the code needed to preform reverse image search between
 The code in this repository has been developed to allow for image retrieval across two different modalities. Contrastive Representation Learning is used to learn dense representations called CoMIRs, which map the original images into an abstract representation space. The (python) code needed to generate CoMIRs is given in [CoMIR Github Repo](https://github.com/MIDA-group/CoMIR/blob/90a4c919b853c090c602d2ca73ba87ddf6b01318/readme.md).
 
 ## How does it work?
-TODO
-A schematic overview is shown in the following figure.
+The proposed CBIR method consists of three stages: (i) it first learns rotationally equivariant representations called CoMIRs using contrastive learning as introduced in Pielawski, Wetzer et al (2020) to bridge the semantic gap between the different modalities; (ii) it creates a bag-of-words (BoW) based on SURF features; (ii) and finally it uses re-ranking to refine the retrieval among the best-ranking matches. The pipeline is shown in the following figure.
 
 <p align="center">
   <img src="resources/pipeline.png" width=700 />
 </p>
 
 ## Key findings of the paper
-TODO
+This repo provides code for the reverse image search across rigidly unaligned modalities, and evaluates it on BF and SHG microscopy images used in histopathology. Our study showed that CoMIRs are usable representations for cross-modality image retrieval. The requirement for rotationally equivariant representations was highlighted, as well as the rotational and translational invariance of the feature extractor applied to them to create the BoW. Re-ranking proved itself as a useful tool to boost the retrieval performance. 
+The proposed combination of CoMIR representations and SURF features together with re-ranking reaches a 75.4\% top-10 success rate to retrieve BF query images in a set of SHG images, and 83.6\% to retrieve SHG query images within the set of BF images, combining the power of deep learning and robust, classical methods.
 
 ## Datasets
 We used the following publicly available dataset:
