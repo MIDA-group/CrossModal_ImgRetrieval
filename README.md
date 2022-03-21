@@ -1,7 +1,9 @@
 # CrossModal_ImgRetrieval
 Cross-Modality Sub-Image Retrieval using Contrastive Multimodal Image Representations
+
 Code of the NeurIPS 2020 paper: [Cross-Modality Sub-Image Retrieval using Contrastive Multimodal Image Representations]
-[Pre-print version on arXiv](https://arxiv.org/abs/2201.03597)
+
+ [Pre-print version on arXiv](https://arxiv.org/abs/2201.03597)
 
 
 ## Table of Contents
