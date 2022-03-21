@@ -1,7 +1,7 @@
 # CrossModal_ImgRetrieval
 Cross-Modality Sub-Image Retrieval using Contrastive Multimodal Image Representations
 
-Code of the NeurIPS 2020 paper: [Cross-Modality Sub-Image Retrieval using Contrastive Multimodal Image Representations]
+Code of our paper: [Cross-Modality Sub-Image Retrieval using Contrastive Multimodal Image Representations]
 
  [Pre-print version on arXiv](https://arxiv.org/abs/2201.03597)
 
@@ -24,7 +24,7 @@ Multimodal imaging is a powerful tool used for many tissue characterizations as 
   <img src="resources/ImgRetrieval.png" width=700 />
 </p>
 
-This repository provides the code needed to preform reverse image search between two sets of images. Any image in the first set can be used as a query to find its counterpart in the second set of images, and vice versa. To enable 
+This repository provides the code needed to preform reverse image search between two sets of images. Any image in the first set can be used as a query to find its counterpart in the second set of images, and vice versa. The method requires no image labels. All code in this repository is written in Matlab 2021b. 
 
 ## How does it work?
 
