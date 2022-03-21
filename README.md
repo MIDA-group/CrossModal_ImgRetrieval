@@ -24,10 +24,11 @@ Multimodal imaging is a powerful tool used for many tissue characterizations as 
 </p>
 
 This repository provides the code needed to preform reverse image search between two sets of images. Any image in the first set can be used as a query to find its counterpart in the second set of images, and vice versa. The method requires no image labels. All code in this repository is written in Matlab 2021b. 
+The code in this repository has been developed to allow for image retrieval across two different modalities. Contrastive Representation Learning is used to learn dense representations called CoMIRs, which map the original images into an abstract representation space. The (python) code needed to generate CoMIRs is given in [CoMIR Github Repo](https://github.com/MIDA-group/CoMIR/blob/90a4c919b853c090c602d2ca73ba87ddf6b01318/readme.md).
 
 ## How does it work?
-
 TODO
+A schematic overview is shown in the following figure.
 
 <p align="center">
   <img src="resources/pipeline.png" width=700 />
