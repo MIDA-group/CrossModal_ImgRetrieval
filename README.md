@@ -44,6 +44,17 @@ We used the following publicly available dataset:
 ## Creation of CBIR
 TODO
 
+### Part 1: Generation of CoMIRs
+In Pielawski, Wetzer et al. (NeurIPS 2020), a method was introduced which uses a contrastive loss to generate representations called CoMIRs. One CoMIR is created per input modality, using two identical U-Nets which are coupled by a contrastive loss. The CoMIRs of two corresponding images in BF and SHG are learnt such that they are similar with respect to a similarity measure, in this study mean squared error. Furthermore, CoMIRs are equivariant to rotation. Hyperparameters are chosen as in Pielwaski, Wetzer et al. The resulting 1-channel CoMIRs are saved in .tif format and used to create the CBIR. The (python) code needed to generate CoMIRs is given in [CoMIR Github Repo](https://github.com/MIDA-group/CoMIR/blob/90a4c919b853c090c602d2ca73ba87ddf6b01318/readme.md).
+
+### Part 2: Feature Extraction
+
+
+### Part 3: Creation of Bag of Words
+
+### Part 4: Retrieval and Re-Ranking
+Retrieval is performed by matching the histograms using cosine similarity. To further improve the retrieval results, the best ranked matches are re-ranked by taking a number of top retrieval matches and cut them into patches of the same size as the query (in case of full-image search, the entire image is used). The resulting patches form a database for which a new (s-)CBIR ranking is computed, using the same configuration as the initial one.
+
 ## Scripts
 TODO
 
