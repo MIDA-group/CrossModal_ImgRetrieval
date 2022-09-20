@@ -42,13 +42,16 @@ We used the following publicly available dataset:
 * Multimodal Biomedical Dataset for Evaluating Registration Methods: https://zenodo.org/record/3874362
 
 ## Creation of CBIR
-TODO
+To retrieve images in modality A corresponding to a query patch in modality B, we design a CBIR which acts as a query-by-example search to perform a reverse image search.  To do so, we transform the original images in modality A and B to abstract image representations, called CoMIRs. Next, we extract features from these CoMIRs, which we index by creating a Bag of Words. Finally the database is search in the retrieval step and the retrieval result is improved by a re-ranking step.
 
 ### Part 1: Generation of CoMIRs
 In Pielawski, Wetzer et al. (NeurIPS 2020), a method was introduced which uses a contrastive loss to generate representations called CoMIRs. One CoMIR is created per input modality, using two identical U-Nets which are coupled by a contrastive loss. The CoMIRs of two corresponding images in BF and SHG are learnt such that they are similar with respect to a similarity measure, in this study mean squared error. Furthermore, CoMIRs are equivariant to rotation. Hyperparameters are chosen as in Pielwaski, Wetzer et al. The resulting 1-channel CoMIRs are saved in .tif format and used to create the CBIR. The (python) code needed to generate CoMIRs is given in [CoMIR Github Repo](https://github.com/MIDA-group/CoMIR/blob/90a4c919b853c090c602d2ca73ba87ddf6b01318/readme.md).
 
 ### Part 2: Feature Extraction
-
+We test two sparse feature extractors (SIFT, SURF) and one dense feature extractor (pretrained ResNET152). 
+The size of the SIFT descriptor is 4 samples per row and column with 8 bins per local histogram. The range of the scale octaves is [32,512] pixels, using 4 steps per octave and an initial sigma of 1.6 for each scale octave. Fiji was used for SIFT extraction. 
+As SURF features, upright multiscale features are extracted in Matlab for patches of size 32, 64, 96 and 128 on a grid with spacing [8,8].
+ResNet152 was pretrained on ImageNet and the features are extracted by removing the last fully connected layer and using an adaptive average pooling to result in features of size 8x8, i.e. 64 after flattening. In order to faciliate the one channel SHG images, the input is copied into three layers.
 
 ### Part 3: Creation of Bag of Words
 
