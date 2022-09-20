@@ -54,6 +54,7 @@ As SURF features, upright multiscale features are extracted in Matlab for patche
 ResNet152 was pretrained on ImageNet and the features are extracted by removing the last fully connected layer and using an adaptive average pooling to result in features of size 8x8, i.e. 64 after flattening. In order to faciliate the one channel SHG images, the input is copied into three layers.
 
 ### Part 3: Creation of Bag of Words
+The features extracted in the previous step are used to form a vocabulary of 2000 words. For each modality a BoW is formed using the entire training set (implemented in Matlab). The fraction of strongest features is set to 0.8, and cosine similarity is chosen to match the histograms/words in the BoWs across modalities.
 
 ### Part 4: Retrieval and Re-Ranking
 Retrieval is performed by matching the histograms using cosine similarity. To further improve the retrieval results, the best ranked matches are re-ranked by taking a number of top retrieval matches and cut them into patches of the same size as the query (in case of full-image search, the entire image is used). The resulting patches form a database for which a new (s-)CBIR ranking is computed, using the same configuration as the initial one.
