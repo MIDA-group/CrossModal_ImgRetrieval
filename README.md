@@ -60,7 +60,61 @@ The features extracted in the previous step are used to form a vocabulary of 200
 Retrieval is performed by matching the histograms using cosine similarity. To further improve the retrieval results, the best ranked matches are re-ranked by taking a number of top retrieval matches and cut them into patches of the same size as the query (in case of full-image search, the entire image is used). The resulting patches form a database for which a new (s-)CBIR ranking is computed, using the same configuration as the initial one.
 
 ## Scripts
-TODO
+We provide scripts for running individual parts of the proposed pipeline manually: consult section **Running manually** for detailed explanation and use examples. In addition, we provide a make file for an automated running of the pipeline: see section **Running with make** for more information. 
+
+Regardless of how you decide to use the provided code, there are a few steps that need to be done in advance. First, clone this repository or download its code to your computer. The provided folder structure is required when running with make (and not required but strongly suggested even when running individual scripts and functions):  
+
+<pre>
+CrossModal_ImgRetrieval
+├── resources
+├── utils
+├── data
+│   ├── modality1
+│   │   └── ... save your images of modality 1 in here
+│   ├── modality2
+│   │   └── ... save your images of modality 2 in here
+├── results
+│   └── ... results of retrieval evaluations will be saved here
+├── Fiji.app
+│   └── ... install fiji here
+├── README.md
+├── LICENSE
+├── requirements.txt
+├── imageretrieval.make
+├── main_script.m
+├── resnet_features.py
+├── compute_sift.py
+├── EvalMatches.m
+└── RetrieveMatches.m
+</pre>
+
+That is, save your data into the data folder, with different modalities in different folders. 
+Next, make sure you have all the required tools and libraries installed: 
+
+- to create CoMIRs please follow the instructions on the [original CoMIR repository](https://github.com/MIDA-group/CoMIR). (The same repository also contains the code for creating GAN fakes as used in our paper.)
+- if you wish to use sift as a feature extractor, download [FIJI](https://imagej.net/software/fiji/downloads) and save the folder Fiji.app in the same folder as the code resides. 
+- if you wish to use (pretrained) resnet as a feature extractor, you need to have python3 installed, together with the packages in the provided requirements.txt file (you can do this for example by calling  `pip install -r requirements.txt` in your command line).
+- to run retrieval and reranking steps (as well as a crude way of retrieval evaluation), you need to have [MATLAB](https://se.mathworks.com/) or [OCTAVE](https://octave.org/download) installed. *WARNING: as of september 2022 the implementation works only with MATLAB!*
+
+#### Running with make
+In the *imageretrieval.make* file set the parameters to desired values. Then call `make -f imageretrieval.make`. By default it will run the entire pipeline (except the creation of CoMIRs - all the data needs to be prepared in advance and residing in correct folders!).
+
+#### Running manually
+***Creating CoMIRs***: use the code and follow the steps [here](https://github.com/MIDA-group/CoMIR). Save the folder with obtained CoMIRs inside the data folder, as a new modality. 
+<span style="font-size:2em;">***Creating pix2pix or cycleGAN fakes***: you can use the code available from the same repository [here](https://github.com/MIDA-group/CoMIR). Again, save the folder with newly created fakes as a new modality folder inside the data folder.</span>  
+
+
+***Extracting SURF features and create a bag of features:***  
+Run the following commands in MATLAB/OCTAVE, using correct path names (if you follow the proposed directory structure, that woul be 'data/modality1' and 'data/modality2') and desired vocabulary size `vocab`.
+```imgstorage = imageDatastore(path_to_modality1); 
+bof = indexImages(imgstorage, bagOfFeatures(imgstorage, 'VocabularySize', vocab), 'SaveFeatureLocations', true);
+```
+
+
+<span style="font-size:2em;">***Extracting SIFT features:*** Call fiji.... will be saved in... </span>  
+
+
+<span style="font-size:2em;">***Extracting RESNET features:*** Call python3... will be saved in... </span>  
 
 **Important:** for each script make sure you update the paths to load the correct
 datasets and export the results in your favorite directory.
