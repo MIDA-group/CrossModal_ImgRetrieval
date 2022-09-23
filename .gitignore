@@ -1,0 +1,38 @@
+results/
+data/
+Fiji*
+
+#python related
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+Pipfile*
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+#matlab/octave related
+# Windows,OSX default autosave extension
+*.asv
+*.m~
+
+# Compiled MEX binaries (all platforms)
+*.mex*
+
+# Packaged app and toolbox files
+*.mlappinstall
+*.mltbx
+
+# Generated helpsearch folders
+helpsearch*/
+
+# Matlab code generation folders
+codegen/
+
+# Octave session info
+octave-workspace
