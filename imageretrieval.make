@@ -27,7 +27,7 @@ VERBOSE = false #control the level of details reported in the command line durin
 
 
 ###### POTENTIALLY USEFUL
-EVLT = false #whether or not to not only do retrieval but also evaluate its correctness. The problem: it 
+EVLT = true #whether or not to not only do retrieval but also evaluate its correctness. The problem: it 
 #requires the corresponding pairs of images in mod1 and mod2 to have the exact same name!
 
 ###########################################################################################
@@ -92,7 +92,7 @@ data/%/features/surf:  | data/% #create parent folders here too, but only to ser
 	mkdir -p $@
 
 
-$(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv:  | data/$(MOD1)/features/$(FEAT_EXTR)  data/$(MOD2)/features/$(FEAT_EXTR)
+$(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv:  data/$(MOD1)/features/$(FEAT_EXTR)  data/$(MOD2)/features/$(FEAT_EXTR)
 	$(CC) "features='$(FEAT_EXTR)'; mod1='$(MOD1)'; mod2='$(MOD2)'; evlt=$(EVLT); save_to='$(SAVE_TO)'; saveit=$(SAVEIT); vocab=$(VOC); hits=$(HIT); verbose=$(VERBOSE); main_script"
 
 

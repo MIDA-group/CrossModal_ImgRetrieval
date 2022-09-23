@@ -41,7 +41,7 @@ if evlt
     L = size(matches, 1);
 
     if saveit 
-        fprintf("\nIntermediate results saved in %s/matches_%s.csv   and   %s/success_%s.csv\n", saveto, savename, save_to, savename);
+        fprintf("\nIntermediate results saved in %s/matches_%s.csv   and   %s/success_%s.csv\n", save_to, savename, save_to, savename);
     end
     fprintf("---> The query correctly retrieved in:  %d/%d  cases.", alla, L);
 end
