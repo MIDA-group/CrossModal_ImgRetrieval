@@ -18,12 +18,12 @@ SAVE_FOLDER = results #/home/eva/Desktop/ImRetCode/CrossModal_ImgRetrieval/resul
 
 
 #which feature extraction to use:
-FEATURE_EXTRACTOR = resnet #sift#surf #resnet
+FEATURE_EXTRACTOR = surf #sift #surf #resnet
 #other parameters:
-VOC = 2000 #size of vocabulary for bof
+VOC = 20000 #size of vocabulary for bof
 HIT = 15 #how many first retrieved hits to check/report
 
-VERBOSE = false #control the level of details reported in the command line during execution
+VERBOSE = true #control the level of details reported in the command line during execution
 
 
 ###### POTENTIALLY USEFUL
@@ -101,7 +101,7 @@ features: | data/$(MOD1)/features/$(FEAT_EXTR) data/$(MOD2)/features/$(FEAT_EXTR
 retrieval: | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv	
 
 reranking: | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv
-#TODO: write the recipe. what is needed? all the info from before? Is all we need saved from before?
+#TODO: write the recipe. what is needed? all the info from before? Is all we need saved from before? What files will it create?
 
 
 

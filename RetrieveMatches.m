@@ -1,17 +1,14 @@
-function all_matches = RetrieveMatches(query_folder, imageIndex, firsthits, savename, NameValueArgs)
+function matchestable = RetrieveMatches(query_folder, imageIndex, firsthits, NameValueArgs)
 %RETRIEVEMATCHES tries to find all images from query_folder inside imageIndex, 
 %   and retrieves the first firsthits best-matching objects. Returns an array
 %   of size nr.queries X firsthits, containing the first firsthits retrieved 
 %   matches' names for each query.
-%       If savematches=true, saves output as a csv file inside folder saveto.
+%       Use optional verbose=true for more verbosity.
 
     arguments
         query_folder string
         imageIndex invertedImageIndex
         firsthits uint16
-        savename string
-        NameValueArgs.savematches logical = false 
-        NameValueArgs.saveto string = "results"
         NameValueArgs.verbose logical = false
     end
 
@@ -55,10 +52,7 @@ for fil=1:L
     end
 end
 
-if NameValueArgs.savematches
-    tmp = array2table(all_matches, RowNames={to_find.name}, VariableNames=string(1:firsthits));
- %   disp(fullfile(NameValueArgs.saveto, strcat('matches_for_',savename,'.csv')))
-    writetable(tmp, fullfile(NameValueArgs.saveto, strcat('matches_for_',savename,'.csv')), 'WriteRowNames', true);
-end
+matchestable = array2table(all_matches, RowNames={to_find.name}, VariableNames=string(1:firsthits));
+
 fprintf("DONE.\n");
 end

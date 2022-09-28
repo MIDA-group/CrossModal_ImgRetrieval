@@ -1,23 +1,21 @@
-function [correct, alla] = EvalMatches(matches, query_folder, savename, NameValueArgs)
+function [correcttable, alla] = EvalMatches(matches, query_folder, NameValueArgs)
 %EVALMATCHES evaluates the correctness of the retrieved matches for the queries in query_folder. 
 %   Returns an array containing (for every query) the rank of the correct match within the chosen nr of 
 %   retrieved objects. 0 for those where correct match was not found within the provided few retrievals.
 %   OBS: requires the query and its perfect match to share the same name. 
-%       If saveit=true, saves the output in a csv file inside saveto folder.  
+%       Use the optional verbose=true for more verbosity.
 
     arguments
-        matches (:,:) string
+        matches table
         query_folder string
-        savename string 
-        NameValueArgs.saveit logical = false 
-        NameValueArgs.saveto string = "results"
         NameValueArgs.verbose logical = false
     end
 
 fprintf("\nEvaluating retrieval success...\n-------------------------\n");
-queries = dir(query_folder);
-itemgetter = @(x) x(1);
-queries = queries((~cellfun(@isempty, {queries.date})) & ~cellfun(itemgetter, {queries.isdir})); %remove any folders and the like
+%queries = dir(query_folder);
+%itemgetter = @(x) x(1);
+%queries = queries((~cellfun(@isempty, {queries.date})) & ~cellfun(itemgetter, {queries.isdir})); %remove any folders and the like
+queries = matches.Properties.RowNames;
 
 L = length(queries);
 hits = size(matches, 2);
@@ -25,20 +23,16 @@ hits = size(matches, 2);
 correct = zeros(L,1);
 for filnr=1:L
     for hitnr=1:hits
-        fil = queries(filnr).name;
-        if contains(fil,  matches(filnr, hitnr)) %query name should contain the match. matches (as output by RetrieveMatches) are suffix free!
+        fil = queries{filnr}; %.name;
+        if contains(fil,  matches{fil, hitnr}); %query name should contain the match. matches (as output by RetrieveMatches) are suffix free!
             correct(filnr,1) = hitnr;
             break
         end
     end
 end
 
-if NameValueArgs.saveit
-    tmp = array2table(correct, RowNames={queries.name});
-    writetable(tmp, fullfile(NameValueArgs.saveto, strcat('success_',savename,'.csv')), 'WriteRowNames', true); 
-    %'correct' contains 0 if correct match not found within HITS retrievals, else the ranking of the correct match within the first HITS retrievals.
-end
-
+correcttable = array2table(correct, RowNames=queries); %{queries.name}
+%'correcttable' contains 0 if correct match not found within HITS retrievals, else the ranking of the correct match within the first HITS retrievals.
 
 
 if NameValueArgs.verbose
@@ -48,7 +42,7 @@ if NameValueArgs.verbose
         else %correct match ranked within HITS 
             matchy=strcat("ranked ", num2str(correct(filnr)));
         end
-        fprintf(strcat("Match for ", queries(filnr).name, ": \t ", matchy, "\n"));
+        fprintf(strcat("Match for ", queries(filnr), ": \t ", matchy, "\n"));
     end
 end
 

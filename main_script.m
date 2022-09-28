@@ -32,18 +32,24 @@ else    %%% assume SIFT or RESNET, precomputed csvs needed
 
 end
 
-%%% RETRIEVAL and EVAL+SAVE RESULTS:
+%%% RETRIEVAL (and EVAL) + SAVE RESULTS:
 %[matches, whereis] = TestWrapper(query_folder, bof, hits, savename=savename, verbose=verbose, saveit=saveit, saveto=save_to);
-matches = RetrieveMatches(query_folder, bof, hits, savename, savematches=saveit, saveto=save_to, verbose=verbose);
+matches = RetrieveMatches(query_folder, bof, hits, verbose=verbose);
+if saveit
+    writetable(matches, fullfile(save_to, strcat('matches_for_',savename,'.csv')), 'WriteRowNames', true);
+    fprintf("* Retrieval results saved in  %s/matches_%s.csv\n", save_to, savename);
+end
+
 
 if evlt
-    [correct, alla] = EvalMatches(matches, query_folder, savename, saveit=saveit, saveto=save_to, verbose=verbose);
+    [correct, alla] = EvalMatches(matches, query_folder, verbose=verbose);
     L = size(matches, 1);
 
     if saveit 
-        fprintf("\nIntermediate results saved in %s/matches_%s.csv   and   %s/success_%s.csv\n", save_to, savename, save_to, savename);
+        writetable(correct, fullfile(save_to, strcat('success_',savename,'.csv')), 'WriteRowNames', true); 
+        fprintf("* Retrieval evaluation results saved in  %s/success_%s.csv", save_to, savename);
     end
-    fprintf("---> The query correctly retrieved in:  %d/%d  cases.", alla, L);
+    fprintf("\n---> The query correctly retrieved in:  %d/%d  cases.", alla, L);
 end
 fprintf("\n \n");
 
