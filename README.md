@@ -60,10 +60,124 @@ The features extracted in the previous step are used to form a vocabulary of 200
 Retrieval is performed by matching the histograms using cosine similarity. To further improve the retrieval results, the best ranked matches are re-ranked by taking a number of top retrieval matches and cut them into patches of the same size as the query (in case of full-image search, the entire image is used). The resulting patches form a database for which a new (s-)CBIR ranking is computed, using the same configuration as the initial one.
 
 ## Scripts
-TODO
+We provide scripts for running individual parts of the proposed pipeline manually: consult section **Running manually** for detailed explanation and use examples. In addition, we provide a make file for an automated running of the pipeline: see section **Running with make** for more information. 
 
-**Important:** for each script make sure you update the paths to load the correct
-datasets and export the results in your favorite directory.
+Regardless of how you decide to use the provided code, there are a few steps that need to be done in advance. First, clone this repository or download its code to your computer. The provided folder structure is required when running with make (and not required but strongly suggested even when running individual scripts and functions):  
+
+<pre>
+CrossModal_ImgRetrieval
+├── resources
+├── utils
+├── data
+│   ├── modality1
+│   │   ├── ... save your images of modality 1 in here
+│   │   └── features
+│   |       └── ... (extracted feature data will be saved here)
+│   └── modality2
+│       ├── ... save your images of modality 2 in here
+│       └── features
+│           └── ... (extracted feature data will be saved here)
+├── results
+│   └── ... (results of retrieval evaluations will be saved here)
+├── Fiji.app
+│   └── ... install fiji here
+├── README.md
+├── LICENSE
+├── requirements.txt
+├── imageretrieval.make
+├── main_script.m
+├── resnet_features.py
+├── compute_sift.py
+├── EvalMatches.m
+└── RetrieveMatches.m
+</pre>
+
+That is, save your data into the data folder, with different modalities in different folders. 
+Next, make sure you have all the required tools and libraries installed: 
+
+- to create CoMIRs please follow the instructions on the [original CoMIR repository](https://github.com/MIDA-group/CoMIR). (The same repository also contains the code for creating GAN fakes as used in our paper.)
+- if you wish to use sift as a feature extractor, download [FIJI](https://imagej.net/software/fiji/downloads) and save the folder Fiji.app in the same folder as the code resides. 
+- if you wish to use (pretrained) resnet as a feature extractor, you need to have python3 installed, together with the packages in the provided requirements.txt file (you can do this for example by calling  `pip install -r requirements.txt` in your command line).
+- to run retrieval and reranking steps (as well as a crude way of retrieval evaluation), you need to have [MATLAB](https://se.mathworks.com/) or [OCTAVE](https://octave.org/download) installed. *WARNING: as of september 2022 the implementation works only with MATLAB!*
+
+### Running with make
+In the *imageretrieval.make* file set the parameters to desired values. Then call  
+
+```make -f imageretrieval.make```. 
+
+By default it will run the entire pipeline (except the creation of CoMIRs - all the data needs to be prepared in advance and residing in correct folders!).  
+
+If you wish to tun only parts of the pipeline, simply delete the names of the modules you do not wish to (re)run from the *all* target in the makefile: 
+``` all: features retrieval reranking  ```.
+But (!) observe that if the required prerequisites for the individual modules don't exist (for example, reranking needs the retrieval csv results to be able to run), the modules that produce the prerequisites will inevitably be run again. 
+
+Observe also that the proposed folder structure needs to be kept in order for this to work. The folders with features and results will be created automatically (if not existing already) during the run of make. 
+
+
+### Running manually
+##### The proposed pipeline steps
+
+1. **Creating CoMIRs:** Use the code and follow the steps [here](https://github.com/MIDA-group/CoMIR). Save the folder with obtained CoMIRs inside the data folder, as a new modality. 
+
+2. **Extracting SURF features and creating a bag of features:**  
+Run the following commands in MATLAB/OCTAVE, using the correct path name (if you follow the proposed directory structure, that would be 'data/modality1') and desired vocabulary size *vocab*.
+
+         imgstorage = imageDatastore(path/to/modality1); 
+         bof = indexImages(imgstorage, bagOfFeatures(imgstorage, 'VocabularySize', vocab), 'SaveFeatureLocations', true);
+
+3. **Do retrieval:** 
+Use the bag of features you have created; if you wish to query images from 'path/to/modality2' and get the first *nr_retrievals* matches for each query, run the code below in Matlab. It returns a string table of size *nr_queries X nr_retrievals*, with every row containing names of the first retrieved matches for that query.  
+        
+        matches = RetrieveMatches(path/to/modality2, bof, nr_retrievals);
+         
+         
+4. **Reranking:** TODO
+
+
+
+
+Important: To do both bag of feature creation and retrieval (and if desired evaluation) directly, you can also simply run the matlab script *main_script.m* (but uncomment and set the variables  first). The code for the evaluation step to reproduce the results in the paper is strictly speaking not the part of the proposed pipeline. For details on how to do it see steps for comparison below.  
+
+
+##### Other steps we used for comparisons
+
+1. **Creating pix2pix or cycleGAN fakes**: you can use the code available from the same repository as [CoMIR code](https://github.com/MIDA-group/CoMIR). Again, save the folder with newly created fakes as a new modality folder inside the data folder.
+
+2. **Extracting SIFT features:** Run the *compute_sift.py* script via fiji. This is done by running the following command in the command line: 
+
+        path/to/fiji --ij2 --headless --console --run compute_sift.py 'path="path/to/modality1", verbose="true"'
+
+   Where the *path/to/fiji* should be substituted by the path to your fiji download and *path/to/modality* by the path to the folder with your images. If you observe the suggested directory structure and run on linux, those would for example be './Fiji.app/ImageJ-linux64' and './data/modality1' respecitvely. Set verbose to false if you want less verbosity. The sift features will be saved in csv files, inside your image data folder. So you need to manually move them to a new folder on the path 'data/modality1/features/sift'. 
+
+
+3. **Extracting RESNET features:** Run the *resnet_features.py* script (make sure all the requirements in *requirements.txt* are satisfied first) by calling
+
+        python3 resnet_features.py --data=data/modality --outpath=data/modality/features/resnet 
+ 
+   with suitable path names from the command line. The resulting csvs with the extracted feature data for all the images in 'data/modality' will be saved in 'data/modality/features/resnet'.
+   
+4. **Creating a bag of features on SIFT or RESNET features:** The bag of words is in this case created on the csv files with the feature data. This is done by calling (in Matlab): 
+
+        bof = getBOF('path/to/features', vocab, features, verbose);
+       
+   with 'path/to/features/' being the path to the folder that contains the required csv files, *vocab* the desired vocabulary size, features a string of 'sift' or 'resnet', depending on which features you use, and verbose a boolean controlling the verbosity level. 
+   
+5. **Retrieval (and evaluation):** Retrieval is done the same way as in the original pipeline, by running the following line of code in Matlab:
+
+        matches = RetrieveMatches(path/to/modality2/feature/data, bof, nr_retrievals);
+
+   OBS! the path to your data shuld now point to the folder with the retrieved features, and not the folder with image data!
+   
+   To be able to evaulate the retrieval, your pairs of modality1 and modality2 images must have the same names. (For a given query, a retrieved image is considered a correct match if it has the same name as a query (up to a suffix).) If you wish to do evaluation, this is done by running 
+
+        [correcttable, nrcorrect] = EvalMatches(matches, path/to/modality2/feature/data);
+        
+   Which returns a table *correcttable* of size *nr_queries X 1*, with each line containing one number, which tells at what place (among the first nr_retrievals) the correct match was found. If it wasn't, the number will be 0. And *nrcorrect* is the total number of the cases in which the correct match for the query was retrieved within the first *nr_retrievals*.
+
+**Important:** for each script make sure you are in the right working directory to run it, and update the paths to load the correct
+datasets and export the results in your desired directory.
+
+
 
 ## Citation
 ```
