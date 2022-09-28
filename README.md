@@ -141,7 +141,7 @@ Important: To do both bag of feature creation and retrieval (and if desired eval
 
 ##### Other steps we used for comparisons
 
-1. **Creating pix2pix or cycleGAN fakes**: you can use the code available from the same repository as [CoMIR code](https://github.com/MIDA-group/CoMIR). Again, save the folder with newly created fakes as a new modality folder inside the data folder.
+1. **Creating pix2pix or cycleGAN fakes**: you can use the code available from the same repository as [CycleGAN and pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix). Again, save the folder with newly created fakes as a new modality folder inside the data folder.
 
 2. **Extracting SIFT features:** Run the *compute_sift.py* script via fiji. This is done by running the following command in the command line: 
 
