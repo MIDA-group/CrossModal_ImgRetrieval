@@ -73,10 +73,10 @@ CrossModal_ImgRetrieval
 │   │   ├── ... save your images of modality 1 in here
 │   │   └── features
 │   |       └── ... (extracted feature data will be saved here)
-│   ├── modality2
-│   │   ├── ... save your images of modality 2 in here
-│   │   └── features
-│   |       └── ... (extracted feature data will be saved here)
+│   └── modality2
+│       ├── ... save your images of modality 2 in here
+│       └── features
+│           └── ... (extracted feature data will be saved here)
 ├── results
 │   └── ... (results of retrieval evaluations will be saved here)
 ├── Fiji.app
@@ -131,8 +131,12 @@ Use the bag of features you have created; if you wish to query images from 'path
         matches = RetrieveMatches(path/to/modality2, bof, nr_retrievals);
          
          
+4. **Reranking:** TODO
 
-OBS: To do both bag of feature creation and retrieval (and if desired evaluation) directly, you can also simply run the matlab script *main_script.m* (but uncomment and set the variables  first). The code for the evaluation step to reproduce the results in the paper is strictly speaking not the part of the proposed pipeline. For details on how to do it see steps for comparison below.  
+
+
+
+Important: To do both bag of feature creation and retrieval (and if desired evaluation) directly, you can also simply run the matlab script *main_script.m* (but uncomment and set the variables  first). The code for the evaluation step to reproduce the results in the paper is strictly speaking not the part of the proposed pipeline. For details on how to do it see steps for comparison below.  
 
 
 ##### Other steps we used for comparisons
