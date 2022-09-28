@@ -95,7 +95,7 @@ CrossModal_ImgRetrieval
 That is, save your data into the data folder, with different modalities in different folders. 
 Next, make sure you have all the required tools and libraries installed: 
 
-- to create CoMIRs please follow the instructions on the [original CoMIR repository](https://github.com/MIDA-group/CoMIR). (The same repository also contains the code for creating GAN fakes as used in our paper.)
+- to create CoMIRs please follow the instructions on the [original CoMIR repository](https://github.com/MIDA-group/CoMIR). (To create GAN fakes as used in our paper, see code at [CycleGAN and pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix).)
 - if you wish to use sift as a feature extractor, download [FIJI](https://imagej.net/software/fiji/downloads) and save the folder Fiji.app in the same folder as the code resides. 
 - if you wish to use (pretrained) resnet as a feature extractor, you need to have python3 installed, together with the packages in the provided requirements.txt file (you can do this for example by calling  `pip install -r requirements.txt` in your command line).
 - to run retrieval and reranking steps (as well as a crude way of retrieval evaluation), you need to have [MATLAB](https://se.mathworks.com/) or [OCTAVE](https://octave.org/download) installed. *WARNING: as of september 2022 the implementation works only with MATLAB!*
