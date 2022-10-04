@@ -40,11 +40,9 @@ if saveit
     fprintf("* Retrieval results saved in  %s/matches_%s.csv\n", save_to, savename);
 end
 
-%RefineUsingBOF
-
 
 if evlt
-    [correct, alla] = EvalMatches(matches, query_folder, verbose=verbose);
+    [correct, alla] = EvalMatches(matches, verbose=verbose);
     L = size(matches, 1);
 
     if saveit 

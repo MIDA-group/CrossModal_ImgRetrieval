@@ -3,7 +3,7 @@ function matchestable = RetrieveMatches(query_folder, imageIndex, firsthits, Nam
 %   and retrieves the first firsthits best-matching objects. Returns an array
 %   of size nr.queries X firsthits, containing the first firsthits retrieved 
 %   matches' names for each query.
-%       Use optional verbose=true for more verbosity.
+%       Use optional verbose=true for more verbosity
 
     arguments
         query_folder string

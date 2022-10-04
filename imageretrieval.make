@@ -95,12 +95,15 @@ data/%/features/surf:  | data/% #create parent folders here too, but only to ser
 $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv:  data/$(MOD1)/features/$(FEAT_EXTR)  data/$(MOD2)/features/$(FEAT_EXTR)
 	$(CC) "features='$(FEAT_EXTR)'; mod1='$(MOD1)'; mod2='$(MOD2)'; evlt=$(EVLT); save_to='$(SAVE_TO)'; saveit=$(SAVEIT); vocab=$(VOC); hits=$(HIT); verbose=$(VERBOSE); main_script"
 
+data/%/patches: | data/% #TODO: cut patches
+	
+
 
 features: | data/$(MOD1)/features/$(FEAT_EXTR) data/$(MOD2)/features/$(FEAT_EXTR)
 
 retrieval: | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv	
 
-reranking: | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv
+reranking: data/$(MOD1)/patches/features/$(FEAT_EXTR) data/$(MOD2)/patches/features/$(FEAT_EXTR) | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv
 #TODO: write the recipe. what is needed? all the info from before? Is all we need saved from before? What files will it create?
 
 
