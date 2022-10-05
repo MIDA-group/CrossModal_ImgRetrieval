@@ -34,7 +34,7 @@ end
 
 %%% RETRIEVAL (and EVAL) + SAVE RESULTS:
 %[matches, whereis] = TestWrapper(query_folder, bof, hits, savename=savename, verbose=verbose, saveit=saveit, saveto=save_to);
-[matches, hit_idx, query_imgs, top_hits] = RetrieveMatches(query_folder, bof, hits, verbose=verbose);
+matches = RetrieveMatches(query_folder, bof, hits, verbose=verbose);
 if saveit
     writetable(matches, fullfile(save_to, strcat('matches_for_',savename,'.csv')), 'WriteRowNames', true);
     fprintf("* Retrieval results saved in  %s/matches_%s.csv\n", save_to, savename);
