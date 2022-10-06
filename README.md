@@ -143,9 +143,9 @@ This can be done by calling
         GeneratePatches(matches, path/to/modality2, path/to/modality1);
         
         
-(OBSERVE: May consume a lot of memory!)
+ (OBSERVE: May consume a lot of memory!)
 
-To then do the reranking, call RerankRetrievals with appropriate paths pointing to your query modality folder, and the newly generated patches folder. Set *vocab* and *hits* to the desired vocabulary size and number of first retrieved hits respectively.  OBSERVE: the reranking will be done based on the previously created patches, which means that only so many first hits as there are available in the original retrieval table of results *matches* will be reranked. Verbosity level is again controlled by an optional *verbose* argument.
+ To then do the reranking, call RerankRetrievals with appropriate paths pointing to your query modality folder, and the newly generated patches folder. Set *vocab* and *hits* to the desired vocabulary size and number of first retrieved hits respectively.  OBSERVE: the reranking will be done based on the previously created patches, which means that only so many first hits as there are available in the original retrieval table of results *matches* will be reranked. Verbosity level is again controlled by an optional *verbose* argument.
 
         newmatches = RerankRetrievals(matches, path/to/modality2, path/to/modality1/patches, 'surf', vocab, hits);
 
@@ -193,8 +193,7 @@ Important: To do both bag of feature creation and retrieval (and if desired eval
 
         newmatches = RerankRetrievals(matches, path/to/modality2, path/to/modality1/patches/feature/data, feature_name, vocab, hits);
 
-with *feature_name* being a string 'sift' or 'resnet', as desired.
-The new matches can be again evaluated as above, in step 5, simply by calling 
+ with *feature_name* being a string 'sift' or 'resnet', as desired. The new matches can be again evaluated as above, in step 5, simply by calling 
 
         [correcttable, nrcorrect] = EvalMatches(newmatches);
 
