@@ -22,8 +22,7 @@ addpath('./utils/'); %for the utility functions
 savename = strcat(mod2, '_in_', mod1, '_', features);
 if strcmp(features, 'surf')
     %%% using SURF
-    imgstorage = imageDatastore(fullfile('data',mod1)); %, 'FileExtensions', {'.tif'}); %TODO: read extension automatically, raise eror if not supported?
-    bof = indexImages(imgstorage, bagOfFeatures(imgstorage, 'VocabularySize', vocab, 'Verbose', verbose), 'SaveFeatureLocations', true);
+    bof = getBOF(fullfile('data',mod1), vocab, features, verbose);
     query_folder = fullfile('data', mod2);
 
 else    %%% assume SIFT or RESNET, precomputed csvs needed
@@ -37,7 +36,7 @@ end
 matches = RetrieveMatches(query_folder, bof, hits, verbose=verbose);
 if saveit
     writetable(matches, fullfile(save_to, strcat('matches_for_',savename,'.csv')), 'WriteRowNames', true);
-    fprintf("* Retrieval results saved in  %s/matches_%s.csv\n", save_to, savename);
+    fprintf("* Retrieval results saved in  %s/matches_for_%s.csv\n", save_to, savename);
 end
 
 

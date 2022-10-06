@@ -1,4 +1,4 @@
-function [patches, varargout] = SplitImageIntoPatches(img, patch_size)
+function [patches, varargout] = splitImageIntoPatches(img, patch_size)
 % returns the patches row-wise from top to bottom
 % optional output is number of [horizontal, vertical] patches
 % returns original image if that is already of the size patch_size

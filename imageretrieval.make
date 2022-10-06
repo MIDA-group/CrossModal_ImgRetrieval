@@ -21,7 +21,11 @@ SAVE_FOLDER = results #/home/eva/Desktop/ImRetCode/CrossModal_ImgRetrieval/resul
 FEATURE_EXTRACTOR = surf #sift #surf #resnet
 #other parameters:
 VOC = 20000 #size of vocabulary for bof
+VOC_RERANK = 20000 #size of vocabulary for bofs in reranking step
+
 HIT = 15 #how many first retrieved hits to check/report
+HIT_AFTER_RERANK = 10 #how many first retrieved hits to check/report after reranking. 
+#OBSERVE: reranking as implemented reranks ONLY the first "HIT" hits, as they were calculated by "retrieval"!
 
 VERBOSE = true #control the level of details reported in the command line during execution
 
@@ -90,8 +94,11 @@ data/%/features/surf:  | data/% #create parent folders here too, but only to ser
 $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv:  data/$(MOD1)/features/$(FEAT_EXTR)  data/$(MOD2)/features/$(FEAT_EXTR)
 	$(CC) "features='$(FEAT_EXTR)'; mod1='$(MOD1)'; mod2='$(MOD2)'; evlt=$(EVLT); save_to='$(SAVE_TO)'; saveit=true; vocab=$(VOC); hits=$(HIT); verbose=$(VERBOSE); main_script"
 
-data/%/patches: | data/% #TODO: cut patches
-	$(CC) "features='$(FEAT_EXTR)'; mod1='$(MOD1)'; mod2='$(MOD2)'; save_to='$(SAVE_TO)'; patchcutting_script"
+
+data/%/patches: UTILS = addpath('./utils/')
+data/%/patches: MATCHES = readtable(fullfile('$(SAVE_TO)', strcat('$(MOD2)', '_in_', '$(MOD1)', '_', '$(FEAT_EXTR)', '.csv')))
+data/%/patches: | data/% # cuts patches
+	$(CC) "$(UTILS); matchtable=$(MATCHES); GeneratePatches(matchtable, 'data/$(MOD1)', 'data/$(MOD2)', verbose=$(VERBOSE));"
 
 
 
@@ -100,11 +107,11 @@ features: | data/$(MOD1)/features/$(FEAT_EXTR) data/$(MOD2)/features/$(FEAT_EXTR
 retrieval: | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv	
 
 reranking: data/$(MOD1)/patches/features/$(FEAT_EXTR) | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv
-#TODO: write the recipe. what is needed? all the info from before? Is all we need saved from before? What files will it create?
+	$(CC) "features='$(FEAT_EXTR)'; mod1='$(MOD1)'; mod2='$(MOD2)'; evlt=$(EVLT); save_to='$(SAVE_TO)'; saveit=true; vocab=$(VOC_RERANK); hits=$(HIT_AFTER_RERANK); verbose=$(VERBOSE); rerank_script"
 
 
 
-clean: # OBS: will clean all the created feature folders, not just the latest! And any cut patches from reranking
+clean: features retrieval # OBS: will clean all the created feature folders, not just the latest! And any cut patches from reranking
 	rm -rf data/$(MOD1)/features data/$(MOD2)/features data/$(MOD1)/patches
 
 

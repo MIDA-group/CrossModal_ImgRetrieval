@@ -20,6 +20,7 @@ ipython_config.py
 # Windows,OSX default autosave extension
 *.asv
 *.m~
+*.mat
 
 # Compiled MEX binaries (all platforms)
 *.mex*
