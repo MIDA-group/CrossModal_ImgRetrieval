@@ -125,7 +125,7 @@ Run the following commands in MATLAB/OCTAVE, using the correct path name (if you
          imgstorage = imageDatastore(path/to/modality1); 
          bof = indexImages(imgstorage, bagOfFeatures(imgstorage, 'VocabularySize', vocab), 'SaveFeatureLocations', true);
          
-Alternatively, you can run the provided function `getBOF` (which can actually handle creating a bag of features for all supported feature extractors (SURF, SIFT and ResNet), given appropriate arguments): 
+   Alternatively, you can run the provided function `getBOF` (which can actually handle creating a bag of features for all supported feature extractors (SURF, SIFT and ResNet), given appropriate arguments): 
 
         bof = getBOF(path/to/modality1, vocab, 'surf', verbose);
         
@@ -142,10 +142,9 @@ This can be done by calling
 
         GeneratePatches(matches, path/to/modality2, path/to/modality1);
         
-        
- (OBSERVE: May consume a lot of memory!)
-
- To then do the reranking, call RerankRetrievals with appropriate paths pointing to your query modality folder, and the newly generated patches folder. Set *vocab* and *hits* to the desired vocabulary size and number of first retrieved hits respectively.  OBSERVE: the reranking will be done based on the previously created patches, which means that only so many first hits as there are available in the original retrieval table of results *matches* will be reranked. Verbosity level is again controlled by an optional *verbose* argument.
+   (OBSERVE: May consume a lot of memory!)
+   
+   To then do the reranking, call RerankRetrievals with appropriate paths pointing to your query modality folder, and the newly generated patches folder. Set *vocab* and *hits* to the desired vocabulary size and number of first retrieved hits respectively.  OBSERVE: the reranking will be done based on the previously created patches, which means that only so many first hits as there are available in the original retrieval table of results *matches* will be reranked. Verbosity level is again controlled by an optional *verbose* argument.
 
         newmatches = RerankRetrievals(matches, path/to/modality2, path/to/modality1/patches, 'surf', vocab, hits);
 
@@ -189,11 +188,11 @@ Important: To do both bag of feature creation and retrieval (and if desired eval
         
    Which returns a table *correcttable* of size *nr_queries X 1*, with each line containing one number, which tells at what place (among the first nr_retrievals) the correct match was found. If it wasn't, the number will be 0. And *nrcorrect* is the total number of the cases in which the correct match for the query was retrieved within the first *nr_retrievals*.
    
-6. **Reranking (and evaluation):** Reranking can be done also for SIFT and ResNet features. It is done following the same steps as above, in the original pipeline, with the difference that after generating the patches, new features need to be calculated on them (i.e. step 2 or 3 above, depending on which fetures you wish to use). Save those into 'path/to/modality1/patches/feature/data' and then call 
+6. **Reranking (and evaluation):** Reranking can be done also for SIFT and ResNet features. It is done following the same steps as above, in the original pipeline, with the difference that after generating the patches, new features need to be calculated on them (i.e. step 2 or 3 above, depending on which features you wish to use). Save those into 'path/to/modality1/patches/feature/data' and then call 
 
         newmatches = RerankRetrievals(matches, path/to/modality2, path/to/modality1/patches/feature/data, feature_name, vocab, hits);
-
- with *feature_name* being a string 'sift' or 'resnet', as desired. The new matches can be again evaluated as above, in step 5, simply by calling 
+        
+   with *feature_name* being a string 'sift' or 'resnet', as desired. The new matches can be again evaluated as above, in step 5, simply by calling 
 
         [correcttable, nrcorrect] = EvalMatches(newmatches);
 
