@@ -12,7 +12,9 @@ function matchestable = RetrieveMatches(query_folder, imageIndex, firsthits, Nam
         NameValueArgs.verbose logical = false
     end
 
-fprintf("\nRetrieving matches...\n-------------------------\n");
+fprintf("\nRetrieving matches...");
+if NameValueArgs.verbose; fprintf("\n-------------------------\n"); end;
+
 to_find = dir(query_folder);
 
 itemgetter = @(x) x(1);

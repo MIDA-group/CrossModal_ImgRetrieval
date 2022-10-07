@@ -2,8 +2,7 @@ function [correcttable, alla] = EvalMatches(matches, NameValueArgs)
 %EVALMATCHES evaluates the correctness of the retrieved matches for the queries in table matches. 
 %   Returns an array containing (for every query) the rank of the correct match within the chosen nr of 
 %   retrieved objects. 0 for those where correct match was not found within the provided few retrievals.
-%   OBS: requires the query and its perfect match to share the same name (or rather, one of them should 
-%       be a substring of the other). 
+%   OBS: requires the query and its perfect match to share the same name (up to a suffix). 
 %       Use the optional verbose=true for more verbosity.
 
     arguments
@@ -11,7 +10,9 @@ function [correcttable, alla] = EvalMatches(matches, NameValueArgs)
         NameValueArgs.verbose logical = false
     end
 
-fprintf("\nEvaluating retrieval success...\n-------------------------\n");
+fprintf("\nEvaluating retrieval success...");
+if NameValueArgs.verbose; fprintf("\n-------------------------\n"); end;
+
 queries = matches.Properties.RowNames;
 
 L = length(queries);
@@ -23,7 +24,7 @@ for filnr=1:L
         fajl = queries{filnr}; %.name;
         [~,fil] = fileparts(fajl);
         matchfil = matches{fajl, hitnr};
-        if contains(fil, matchfil) | contains(matchfil, fil); %query name should contain the match. Or vice versa. matches (as output by RetrieveMatches) are suffix free!
+        if contains(fil, matchfil) %| contains(matchfil, fil); %query name should contain the match. matches (as output by RetrieveMatches) are suffix free!
             correct(filnr,1) = hitnr;
             break
         end

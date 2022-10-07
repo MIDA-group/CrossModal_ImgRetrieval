@@ -4,7 +4,7 @@ function matcharray = filterQueryMatches(matchrow, hits)
 % Again assumes patches are named (WHOLE IMAGE NAME)_(OLD HIT ID)_(PATCH ID).
 % Returns 1 x hits string array.
 
-wholeImgNames = regexprep(matchrow{1,:}, "_\d+_\d+$", "");
+wholeImgNames = regexprep(matchrow{1,:}, "_\d+$", "");
 matcharray = unique(wholeImgNames, 'stable'); %unique keeps all <missing>s, so there should be enough elements to slice out first hits!
 matcharray = matcharray(1:hits);
 

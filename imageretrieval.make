@@ -18,16 +18,16 @@ SAVE_FOLDER = results #/home/eva/Desktop/ImRetCode/CrossModal_ImgRetrieval/resul
 
 
 #which feature extraction to use:
-FEATURE_EXTRACTOR = surf #sift #surf #resnet
+FEATURE_EXTRACTOR = sift #sift #surf #resnet
 #other parameters:
-VOC = 20000 #size of vocabulary for bof
-VOC_RERANK = 20000 #size of vocabulary for bofs in reranking step
+VOC = 2000 #size of vocabulary for bof
+VOC_RERANK = 2000 #size of vocabulary for bofs in reranking step
 
 HIT = 15 #how many first retrieved hits to check/report
 HIT_AFTER_RERANK = 10 #how many first retrieved hits to check/report after reranking. 
 #OBSERVE: reranking as implemented reranks ONLY the first "HIT" hits, as they were calculated by "retrieval"!
 
-VERBOSE = true #control the level of details reported in the command line during execution
+VERBOSE = false #control the level of details reported in the command line during execution
 
 
 ###### POTENTIALLY USEFUL
@@ -37,7 +37,7 @@ EVLT = true #whether or not to not only do retrieval but also evaluate its corre
 ###########################################################################################
 
 #what all to do.
-.PHONY: all features retrieval reranking clean
+.PHONY: all features retrieval reranking #clean
 all: features retrieval reranking  #add or remove reranking (and even features maybe) if needed
 #what it all does:
 #features: calcs features (csvs, resnet, or does nothing if surf)
@@ -79,13 +79,17 @@ endif
 data/%/features/sift: PARAMS = $(OQ)path=$(IQ)./data/$*/*$(IQ), 
 data/%/features/sift: VRBS = verbose=$(IQ)$(VERBOSE)$(IQ)$(OQ)
 data/%/features/sift: | data/% 
-	mkdir -p $@ 
+	rm -rf $@_tmp
+	mkdir -p $@_tmp
 	$(FIJI) $(IJFLAGS) $(PARAMS)$(VRBS)
-	mv data/$*/*.csv data/$*/features/sift/.
+	mv data/$*/*.csv data/$*/features/sift_tmp/.
+	mv $@_tmp $@
 
 data/%/features/resnet: | data/%
-	mkdir -p $@
-	$(CCPY) resnet_features.py --data=data/$* --outpath=data/$*/features/resnet
+	rm -rf $@_tmp
+	mkdir -p $@_tmp
+	$(CCPY) resnet_features.py --data=data/$* --outpath=data/$*/features/resnet_tmp
+	mv $@_tmp $@
 
 data/%/features/surf:  | data/% #create parent folders here too, but only to serve as a dummy in case of SURF
 	mkdir -p $@
@@ -96,22 +100,28 @@ $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv:  data/$(MOD1)/featur
 
 
 data/%/patches: UTILS = addpath('./utils/')
-data/%/patches: MATCHES = readtable(fullfile('$(SAVE_TO)', strcat('$(MOD2)', '_in_', '$(MOD1)', '_', '$(FEAT_EXTR)', '.csv')))
+data/%/patches: READ_PAR =  'ReadVariableNames', true, 'ReadRowNames', true, 'Delimiter', ',', 'VariableNamingRule', 'preserve' 
+data/%/patches: MATCHES = fullfile('$(SAVE_TO)', 'matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv')
 data/%/patches: | data/% # cuts patches
-	$(CC) "$(UTILS); matchtable=$(MATCHES); GeneratePatches(matchtable, 'data/$(MOD1)', 'data/$(MOD2)', verbose=$(VERBOSE));"
-
+	rm -rf $@_tmp
+	mkdir -p $@_tmp
+	$(CC) "$(UTILS); matchtable=readtable($(MATCHES), $(READ_PAR)); GeneratePatches(matchtable, 'data/$(MOD2)', 'data/$(MOD1)', verbose=$(VERBOSE), saveto='data/$*/patches_tmp');"
+	mv $@_tmp $@
 
 
 features: | data/$(MOD1)/features/$(FEAT_EXTR) data/$(MOD2)/features/$(FEAT_EXTR)
 
 retrieval: | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv	
 
-reranking: data/$(MOD1)/patches/features/$(FEAT_EXTR) | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv
+reranking: | $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR)_reranked.csv
+
+
+$(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR)_reranked.csv: data/$(MOD1)/patches/features/$(FEAT_EXTR)  $(SAVE_TO)/matches_for_$(MOD2)_in_$(MOD1)_$(FEAT_EXTR).csv
 	$(CC) "features='$(FEAT_EXTR)'; mod1='$(MOD1)'; mod2='$(MOD2)'; evlt=$(EVLT); save_to='$(SAVE_TO)'; saveit=true; vocab=$(VOC_RERANK); hits=$(HIT_AFTER_RERANK); verbose=$(VERBOSE); rerank_script"
 
 
 
-clean: features retrieval # OBS: will clean all the created feature folders, not just the latest! And any cut patches from reranking
-	rm -rf data/$(MOD1)/features data/$(MOD2)/features data/$(MOD1)/patches
+#clean: features retrieval # OBS: will clean all the created feature folders, not just the latest! And any cut patches from reranking
+#	rm -rf data/$(MOD1)/features data/$(MOD2)/features data/$(MOD1)/patches
 
 

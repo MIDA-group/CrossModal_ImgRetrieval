@@ -12,25 +12,25 @@ function imageIndex = getBOF(bof_files, vocabulary_size, extractor_type, verbose
 
 if strcmp(extractor_type, 'sift')
     customExtractor = @customBagOfFeaturesExtractor;
-    customRead = @customReader;
     args = {'VocabularySize', vocabulary_size, 'CustomExtractor', customExtractor, 'Verbose', verbose};
+    imdargs = {'FileExtensions', {'.csv'}, 'ReadFcn', @customReader};
     saveFeatLocs = true;
 
 elseif strcmp(extractor_type, 'surf')
-    customRead = @imread;
     args = {'VocabularySize', vocabulary_size, 'Verbose', verbose};
+    imdargs = {};
     saveFeatLocs = true;
 
 else %assume extractor_type=='resnet'
     customExtractor = @customBagOfFeaturesExtractorRESNET;
-    customRead = @customReader;
     args = {'VocabularySize', vocabulary_size, 'CustomExtractor', customExtractor, 'Verbose', verbose};
+    imdargs = {'FileExtensions', {'.csv'}, 'ReadFcn', @customReader};
     saveFeatLocs = false;
     
 end
 
 %do bag of features
-imds = imageDatastore(bof_files, 'ReadFcn', customRead);
+imds = imageDatastore(bof_files, imdargs{:});
 csvBag = bagOfFeatures(imds, args{:});
 
 %index all images

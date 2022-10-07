@@ -36,7 +36,7 @@ addpath('./utils/'); %for the utility functions
 
 
 %Get all guery names from old savename csv
-oldmatches = readtable(fullfile(save_to, strcat('matches_for_', mod2, '_in_', mod1, '_', features,'.csv')));
+oldmatches = readtable(fullfile(save_to, strcat('matches_for_', mod2, '_in_', mod1, '_', features,'.csv')), 'ReadVariableNames', true, 'ReadRowNames', true, 'Delimiter', ',', 'VariableNamingRule', 'preserve');
 
 %get suffix (if csv, folder whould be features instead of img), or just check feature type 
 if strcmp(features, 'surf')
@@ -69,6 +69,6 @@ if evlt
         writetable(correct, fullfile(save_to, strcat('success_',savename,'.csv')), 'WriteRowNames', true); 
         fprintf("* Reranked retrieval evaluation results saved in  %s/success_%s.csv", save_to, savename);
     end
-    fprintf("\n---> After reranking, the query correctly retrieved in:  %d/%d  cases.", alla, nrqueries);
+    fprintf("\n---> After reranking, the query correctly retrieved in:  %d/%d  cases.", alla, height(matches));
 end
 fprintf("\n \n");

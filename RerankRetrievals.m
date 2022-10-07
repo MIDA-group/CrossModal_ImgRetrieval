@@ -19,7 +19,8 @@ function matches = RerankRetrievals(oldmatches, query_folder, bof_folder, featur
 
 
 
-fprintf("\nReranking matches...\n-------------------------\n");
+fprintf("\nReranking matches...");
+if NameValueArgs.verbose; fprintf("\n-------------------------\n"); end;
 
 queries = oldmatches.Properties.RowNames;
 [nrqueries, nrhitsold] = size(oldmatches); 
@@ -32,9 +33,13 @@ for querynr=1:nrqueries
     queryname = queries{querynr};
     query = fullfile(query_folder, queryname);
 
+    
+    fprintf("\nBuilding BagOfFeatures for %s...", queryname);
+    
+    %[~, bof] = evalc('getBOF(getListOfFiles(bof_folder, oldmatches(queryname,:)), vocab, features, false)'); %Can remove evalc, just here to avoid too much output in command line really...
     bof = getBOF(getListOfFiles(bof_folder, oldmatches(queryname,:)), vocab, features, NameValueArgs.verbose);
 
-    querymatches = RetrieveMatches(query, BOF, L, verbose=NameValueArgs.verbose); %get ALL hits, then take out first hits nr of image matches 
+    querymatches = RetrieveMatches(query, bof, L, verbose=false); %get ALL hits, then take out first hits nr of image matches 
 
     %gather results for all queries and save to new MATCHES table
     all_matches(querynr,:) = filterQueryMatches(querymatches, hits); 

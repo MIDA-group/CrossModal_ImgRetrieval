@@ -10,17 +10,22 @@ function GeneratePatches(matchtable, query_folder, bof_folder, NameValueArgs)
         matchtable table
         query_folder string
         bof_folder string 
+        NameValueArgs.saveto string = fullfile(bof_folder, 'patches')
         NameValueArgs.verbose logical = false
     end
 
 
-mkdir(bof_folder, 'patches');
+[~, ~] = mkdir(NameValueArgs.saveto);
 
 fprintf("\n Generating query-sized patches for reranking...\n");
+
 [nrqueries, nrhits] = size(matchtable);
-for queryname=matchtable.Properties.RowNames
-    [~,~,suffix] = fileparts(queryname);
-    query = imread(fullfile(query_folder, queryname));
+for querynr=1:nrqueries
+    fullqueryname = matchtable.Properties.RowNames{querynr};
+    [~,queryname,~] = fileparts(fullqueryname); %get rid of suffix, since it could be csv
+    tmp = dir(fullfile(query_folder, strcat(queryname,'*'))); %find the actual image file with this name
+    [~, ~, suffix] = fileparts(tmp.name); %get the image suffix
+    query = imread(fullfile(query_folder, strcat(queryname,suffix)));
     %open first query img to get size %<- can be omitted, simply specify desired patch_size in that case
     patch_size = size(query);
 
@@ -29,12 +34,17 @@ for queryname=matchtable.Properties.RowNames
     end
 
     for hitnr=1:nrhits
-        hitname = matchtable(queryname, hitnr);
+        hitname = matchtable{fullqueryname, hitnr}{:};
         hit = imread(fullfile(bof_folder, strcat(hitname, suffix)));
+        ndim = ndims(hit);
+        S.type='()';
+        S.subs = repmat({':'}, 1, ndim); % can be 2 or 3 dim (if rgb)
+        
         [patches, gridsize] = splitImageIntoPatches(hit, patch_size);
         for k = 1:(gridsize(1)*gridsize(2))
             % filename is imgname_hit-index_patch-index
-            imwrite(patches(:,:,k), fullfile(bof_folder, 'patches', strcat(hitname, '_',hitnr,'_', k, suffix)));
+            S.subs{ndim} = k;
+            imwrite(subsref(patches,S), fullfile(NameValueArgs.saveto, strcat(hitname,'_', num2str(k), suffix)));
         end
     end
 
