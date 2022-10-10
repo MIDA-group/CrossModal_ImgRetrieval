@@ -18,21 +18,21 @@ SAVE_FOLDER = results #/home/eva/Desktop/ImRetCode/CrossModal_ImgRetrieval/resul
 
 
 #which feature extraction to use:
-FEATURE_EXTRACTOR = sift #sift #surf #resnet
+FEATURE_EXTRACTOR = surf #sift #surf #resnet
 #other parameters:
-VOC = 2000 #size of vocabulary for bof
-VOC_RERANK = 2000 #size of vocabulary for bofs in reranking step
+VOC = 20000 #size of vocabulary for bof
+VOC_RERANK = 20000 #size of vocabulary for bofs in reranking step
 
-HIT = 15 #how many first retrieved hits to check/report
+HIT = 30 #how many first retrieved hits to check/report
 HIT_AFTER_RERANK = 10 #how many first retrieved hits to check/report after reranking. 
 #OBSERVE: reranking as implemented reranks ONLY the first "HIT" hits, as they were calculated by "retrieval"!
 
-VERBOSE = false #control the level of details reported in the command line during execution
+VERBOSE = true #control the level of details reported in the command line during execution
 
 
 ###### POTENTIALLY USEFUL
 EVLT = true #whether or not to not only do retrieval but also evaluate its correctness. The problem: it 
-#requires the corresponding pairs of images in mod1 and mod2 to have the exact same name!
+#requires the corresponding pairs of images in mod1 and mod2 to have the exact same name (up to a suffix)!
 
 ###########################################################################################
 

@@ -34,7 +34,7 @@ for querynr=1:nrqueries
     query = fullfile(query_folder, queryname);
 
     
-    fprintf("\nBuilding BagOfFeatures for %s...", queryname);
+    fprintf("\nBuilding BagOfFeatures for %s...\n", queryname);
     
     %[~, bof] = evalc('getBOF(getListOfFiles(bof_folder, oldmatches(queryname,:)), vocab, features, false)'); %Can remove evalc, just here to avoid too much output in command line really...
     bof = getBOF(getListOfFiles(bof_folder, oldmatches(queryname,:)), vocab, features, NameValueArgs.verbose);

@@ -69,6 +69,6 @@ if evlt
         writetable(correct, fullfile(save_to, strcat('success_',savename,'.csv')), 'WriteRowNames', true); 
         fprintf("* Reranked retrieval evaluation results saved in  %s/success_%s.csv", save_to, savename);
     end
-    fprintf("\n---> After reranking, the query correctly retrieved in:  %d/%d  cases.", alla, height(matches));
+    fprintf("\n---> After reranking, the query correctly retrieved (within %d-hits) in:  %d/%d  cases.", hits, alla, height(matches));
 end
 fprintf("\n \n");

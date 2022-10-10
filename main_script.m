@@ -48,7 +48,7 @@ if evlt
         writetable(correct, fullfile(save_to, strcat('success_',savename,'.csv')), 'WriteRowNames', true); 
         fprintf("* Retrieval evaluation results saved in  %s/success_%s.csv", save_to, savename);
     end
-    fprintf("\n---> The query correctly retrieved in:  %d/%d  cases.", alla, L);
+    fprintf("\n---> The query correctly retrieved (within %d-hits) in:  %d/%d  cases.", hits, alla, L);
 end
 fprintf("\n \n");
 
