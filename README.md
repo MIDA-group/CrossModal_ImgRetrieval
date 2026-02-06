@@ -1,8 +1,6 @@
 # Cross-Modality Sub-Image Retrieval using Contrastive Multimodal Image Representations
 
-Code of our paper: [Cross-Modality Sub-Image Retrieval using Contrastive Multimodal Image Representations]
-
-[Scientific Reports](https://doi.org/10.1038/s41598-024-68800-1)
+Code of our paper: [Cross-Modality Sub-Image Retrieval using Contrastive Multimodal Image Representations](https://doi.org/10.1038/s41598-024-68800-1)
 
 
 ## Table of Contents
