@@ -2,7 +2,7 @@
 
 Code of our paper: [Cross-Modality Sub-Image Retrieval using Contrastive Multimodal Image Representations]
 
-[ [Scientific Reports](https://doi.org/10.1038/s41598-024-68800-1)
+[Scientific Reports](https://doi.org/10.1038/s41598-024-68800-1)
 
 
 ## Table of Contents
